@@ -32,6 +32,7 @@ rofi_menu() {
     )
 }
 
+# Enable scipt to be used from cli
 while getopts ":ls" option; do
     case ${option} in
         l)
