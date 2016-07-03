@@ -4,7 +4,7 @@ shopt -s nullglob
 SH_DEST="/usr/local/bin"
 SERVICE_DEST="/etc/systemd/system"
 
-for file in ./{i3,arch}/*.sh; do
+for file in ./{i3,arch,sysadmin}/*.sh; do
     ln -fs "$(realpath "${file}")" "${SH_DEST}/"
 done
 
