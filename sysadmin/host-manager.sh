@@ -113,7 +113,7 @@ main() {
     selection=$(
         echo -e "$( echo "${HOSTS}" \
         | cut -d ',' -f 1 )" \
-        | rofi -dmenu -i -fullscreen -p "Host: " -mesg "${HELP}" \
+        | rofi -dmenu -i -fullscreen -p "Host: " -mesg "${HELP}" -columns 2 -i \
             -kb-move-word-forward "" \
             -kb-custom-1 "Alt+f" \
             -kb-custom-2 "Alt+s" \
