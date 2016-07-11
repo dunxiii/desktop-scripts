@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get user that started the visual environment
-user=$(w -sh | grep "tty$(fgconsole 2>/dev/null)" | awk '{ print $1 }')
+user=$(w -sh | grep "tty$(fgconsole 2>/dev/null)" | awk 'NR==1{print $1}')
 
 # If used from cmd directly set user var correctly
 if [ -z "${user}" ]
