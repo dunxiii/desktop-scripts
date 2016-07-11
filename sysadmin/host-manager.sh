@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# TODO: Save ALL info in pass, stop use ssh config file! Using ssh config file makes things hard to manage then there are lots of hosts
 HOSTS=$(awk '
         BEGIN { RS = "\n\n" }
         $1 == "Host" && $2 != "*" {
