@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO what if workspace has no x: ...
-# TODO allow for workspace to not be bind to key
 # TODO other keybinds for second monitor F1-F12
 # TODO Show on all monitors?
 
@@ -15,26 +13,32 @@ WORKSPACES=$(
 
 find_workspace() {
     # Check if workspace already exists
-    WORKSPACE="$(echo -e "${WORKSPACES}" | grep --word-regexp "${1}:")"
+    WORKSPACE="$(echo -e "${WORKSPACES}" | grep --word-regexp "${1}\|${1}:")"
     if [[ $? -eq 0 ]]; then
+        # Return workspace
         echo "${WORKSPACE}"
+    else
+        # Return number if workspace was not found in list
+        echo "${1}"
     fi
 }
 
 goto_workspace() {
     # Check if workspace for that key exist
     WORKSPACE="$(find_workspace "${1}")"
-    if [[ -n "${WORKSPACE}" ]]; then
-        # There is a workspace, go to it
-        i3-msg workspace "${WORKSPACE}"
+
+    if [[ "${2}" = mv_container ]]; then
+        i3-msg move container to workspace "${WORKSPACE}"
     else
-        NAME=$(rofi -dmenu -p "Name workspace:" <<< "")
-        if [[ "${2}" = mv_container ]]; then
-            i3-msg move container to workspace "${1}: ${NAME}"
-        else
-            i3-msg workspace "${1}: ${NAME}"
-        fi
+        i3-msg workspace "${WORKSPACE}"
     fi
+}
+
+# TODO Better rename workflow
+# Not used
+rename_workspace() {
+    NAME=$(rofi -dmenu -p "Name workspace:" <<< "")
+    i3-msg rename workspace to "${SELECTION/\#/\ }"
 }
 
 #find_free_num() {
