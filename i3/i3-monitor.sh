@@ -31,6 +31,8 @@ main() {
 
     fi
 
+    killall compton
+
     case "${SELECTION}" in
         Internal)
             xrandr  --output "${SEC_MONITOR}" --off \
@@ -50,12 +52,12 @@ main() {
 
             [[ -z "${SEC_PLACEMENT}" ]] && exit
 
-            # sleep is neccesary to not hang X...
-            sleep 0.5
             xrandr  --output "${MAIN_MONITOR}" --auto \
                     --output "${SEC_MONITOR}" --auto "--${SEC_PLACEMENT,,}" "${MAIN_MONITOR}"
             ;;
     esac
+
+    compton -b --config ~/.compton.conf
 
     DISPLAY=:0 feh --bg-scale ~/Pictures/wallpaper.*
 
