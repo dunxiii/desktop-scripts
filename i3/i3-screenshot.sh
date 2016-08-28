@@ -3,6 +3,7 @@
 # List items
 list="1) fullscreen
       2) select window"
+DEST_PATH=~/Pictures/screenshots
 
 # Menu to print on screen
 # sed string removes leading whitespace only
@@ -18,13 +19,26 @@ if [ ! -d ~/Pictures/screenshots/ ]; then
     mkdir ~/Pictures/screenshots/
 fi
 
+screanshoot() {
+    NAME="$(date +%Y%m%d)"
+    if ls ${DEST_PATH}/${NAME}*.png 1> /dev/null 2>&1; then
+        i=0
+        while ls ${DEST_PATH}/${NAME}-${i}.png 1> /dev/null 2>&1; do
+            let i++
+        done
+        NAME="${NAME}-${i}"
+    fi
+
+    scrot ${1} "${NAME}.png" -e "mv \$f ${DEST_PATH}/"
+}
+
 # What to execute
 case "${selection}" in
     "1)"*)
-        scrot -d 1 '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'
+        screanshoot "-d 1"
         ;;
     "2)"*)
-        scrot -s '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'
+        screanshoot "-s"
         ;;
     *)
         exit 1
