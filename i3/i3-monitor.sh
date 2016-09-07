@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MAIN_MONITOR=$(xrandr | grep -w connected | head -n1 | cut -f 1 -d " ")
-SEC_MONITOR=$(xrandr | grep -w connected | head -n 2 | tail -n 1 | cut -f 1 -d " ")
+MAIN_MONITOR="eDP1"
+SEC_MONITOR=$(xrandr | grep -w -e connected | grep -v -e "${MAIN_MONITOR}" | cut -f 1 -d " ")
 CUR_WORKSPACE=$(i3-msg message -t get_workspaces | jq '.[] | select(.focused==true) | .name' 2>/dev/null)
 LAST_CONFIG=~/.screenlayout/last_config
 
@@ -12,13 +12,27 @@ read -r -d '' LIST <<- EOF
 EOF
 
 main() {
+
     if [[ "${LOAD_CONF}" = true ]]; then
 
-        if [[ "$(cat "${LAST_CONFIG}" | tail -n +2)" == "$(xrandr | grep -w connected | awk '{print $1,$2}')" ]]; then
-            SELECTION=$(cat "${LAST_CONFIG}" | head -n 1 | cut -f 1 -d " ")
-            SEC_PLACEMENT=$(cat "${LAST_CONFIG}" | head -n 1 | cut -f 2 -d " ")
-        else
-            SELECTION="Internal"
+        if [[ -f "${LAST_CONFIG}" ]]; then
+
+            source "${LAST_CONFIG}"
+
+            for display in "${MAIN_MONITOR}" "${SEC_MONITOR}"; do
+                xrandr | grep -w -e connected | grep -e "${display}"
+                err=$?
+
+                # Handle wrong display names and disconncted monitors
+                if [[ "${err}" -eq 1 ]] && [[ "${display}" == "${MAIN_MONITOR}" ]]; then
+                    exit 1
+                elif [[ "${err}" -eq 1 ]] && [[ "${display}" == "${SEC_MONITOR}" ]]; then
+                    unset SEC_MONITOR
+                    unset SEC_PLACEMENT
+                    SELECTION="Internal"
+                fi
+            done
+
         fi
 
     else
@@ -65,8 +79,13 @@ main() {
         i3-msg workspace "${CUR_WORKSPACE}" &>/dev/null
     fi
 
-    echo -e "${SELECTION} ${SEC_PLACEMENT}" > "${LAST_CONFIG}"
-    echo -e "$(xrandr | grep -w connected | awk '{print $1,$2}')" >> "${LAST_CONFIG}"
+    if [[ ! -d $(dirname "${LAST_CONFIG}") ]]; then
+        mkdir $(dirname "${LAST_CONFIG}")
+    fi
+
+    echo -e "SELECTION=${SELECTION}" > "${LAST_CONFIG}"
+    echo -e "SEC_PLACEMENT=${SEC_PLACEMENT}" >> "${LAST_CONFIG}"
+    echo -e "SEC_MONITOR=${SEC_MONITOR}" >> "${LAST_CONFIG}"
 }
 
 while getopts "c" option; do
