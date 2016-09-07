@@ -33,7 +33,7 @@ set_brightness() {
         exit 1
     fi
 
-    # If there is a file for max brightness we are ready to change the value of brightness
+    # Only if there is a file for max brightness we change the value of brightness
     if [ -f ${path}/max_brightness ]; then
         # Get values from system files
         max=$(cat ${path}/max_brightness)
