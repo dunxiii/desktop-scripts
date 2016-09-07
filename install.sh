@@ -23,7 +23,7 @@ for file in ${PWD}/$(hostname)/*.sh; do
     ln -fs "$(realpath "${file}")" "${SH_DEST}/"
 done
 
-for file in ${PWD}/$(hostname)/service/*.service; do
+for file in ${PWD}/services/* ${PWD}/$(hostname)/service/*.service; do
     ln -fs "$(realpath "${file}")" "${SERVICE_DEST}/"
     # Systemd bug forces me to use realpath instead of basename...
     # https://github.com/systemd/systemd/issues/3010
