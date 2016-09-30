@@ -1,10 +1,12 @@
 #!/usr/bin/expect
 
+log_user 0
+
 set host [lindex $argv 0]
 set user [lindex $argv 1]
 set pw [lindex $argv 2]
 
-spawn bash -c "forticlientsslvpn_cli --server $host --vpnuser $user --keepalive"
+spawn bash -c "~/Insync/job/forticlientsslvpn/forticlientsslvpn_cli --server $host --vpnuser $user --keepalive"
 
 expect "Password for VPN:"
 

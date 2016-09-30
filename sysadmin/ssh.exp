@@ -1,0 +1,52 @@
+#!/usr/bin/expect
+
+log_user 0
+
+set cmd [lindex $argv 0]
+set opts [lindex $argv 1]
+set user [lindex $argv 2]
+set host [lindex $argv 3]
+set password [lindex $argv 4]
+set path [lindex $argv 5]
+
+if { $cmd == "sshfs"} {
+
+    spawn $cmd $opts -f $user@$host: $path
+
+} else {
+
+    spawn $cmd $opts $user@$host
+
+}
+
+expect {
+    "password:" {
+        send "$password\r"
+    }
+    "(yes/no)?" {
+        send "yes\r"
+        expect "password:" {
+            send "$password\r"
+        }
+    }
+    "" {
+    # Needed for sshfs with sshkeypair and no password
+    }
+    "\n" {
+    # Needed for sshfs with password
+    }
+    default {
+        send_user "Login failed\r"
+        sleep 5
+    }
+}
+
+if { $cmd == "sshfs"} {
+
+    interact "\r" return
+
+} else {
+
+    interact
+
+}

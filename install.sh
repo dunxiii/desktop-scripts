@@ -14,7 +14,7 @@ for file in ${PWD}/arch/pacman/hooks/*.hook; do
     ln -fs "$(realpath "${file}")" "${HOOKS_DEST}/"
 done
 
-for file in ${PWD}/{i3,sysadmin}/*.sh; do
+for file in ${PWD}/{i3,sysadmin}/*; do
     ln -fs "$(realpath "${file}")" "${SH_DEST}/"
 done
 
@@ -29,5 +29,7 @@ for file in ${PWD}/services/* ${PWD}/$(hostname)/service/*.service; do
     # https://github.com/systemd/systemd/issues/3010
     systemctl enable --now "$(realpath "${file}")"
 done
+
+ln -s /home/jack/Insync/job/forticlientsslvpn/forticlientsslvpn_cli "${SH_DEST}/forticlientsslvpn_cli"
 
 chmod -R +x "${SH_DEST}"
