@@ -55,13 +55,12 @@ done
 case "${selection}" in
     "1)"*)
         lock
-        xset dpms force off
         ;;
     "2)"*)
         i3-msg exit
         ;;
     "3)"*)
-        systemctl poweroff
+        systemctl poweroff -i
         ;;
     "4)"*)
         systemctl reboot
