@@ -21,6 +21,8 @@ list="1) lock
 lock() {
     pkill gnome-keyring-d || true
     i3lock -ti /home/"${user}"/Pictures/wallpaper.*
+    # sleep to prevent race conditions
+    sleep 1
 }
 
 rofi_menu() {
