@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Remove
+Operation = Upgrade
+Type = Package
+Target = linux
+
+[Action]
+Depends = coreutils
+Depends = bash
+When = PreTransaction
+Exec = /usr/bin/bash -c 'cp /boot/vmlinuz-linux{,-backup}; cp /boot/initramfs-linux.img{,-backup}'
