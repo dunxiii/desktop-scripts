@@ -20,7 +20,8 @@ if { $cmd == "sshfs"} {
 }
 
 expect {
-    "password:" {
+    # p is sometimes uppercase, sometimes lowercase, just ignore p
+    "assword:" {
         send "$password\r"
     }
     "(yes/no)?" {
@@ -29,7 +30,8 @@ expect {
             send "$password\r"
         }
     }
-    "" {
+    # TODO only expect this if keys are used without password
+    #"" {
     # Needed for sshfs with sshkeypair and no password
     }
     "\n" {
